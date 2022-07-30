@@ -9,7 +9,10 @@
 		"baseUrl": "src",
 		"paths": {
 			"@openWeather": [
-				"./services/openWeather.ts"
+				"./services/openWeather/index.ts"
+			],
+			"@openWeather/*": [
+				"./services/openWeather/*"
 			]
 		},
 		"allowJs": true,

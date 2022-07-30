@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import { OpenCageGeolocationDataType } from "./types";
 
@@ -7,12 +7,11 @@ const api = axios.create({
 	params: {
 		key: process.env.NEXT_PUBLIC_OPENCAGE_KEY,
 		pretty: 1,
-		no_annotations: 1,
 		language: "pt"
 	}
 });
 
-export function getGeolocationData(latitude: number, longitude: number): Promise<{ data: OpenCageGeolocationDataType }> {
+export function getGeolocationData(latitude: number, longitude: number): Promise<AxiosResponse<OpenCageGeolocationDataType>> {
 	return new Promise(async (resolve, reject) => {
 		try {
 			const { data } = await api.get("json", {
@@ -24,7 +23,7 @@ export function getGeolocationData(latitude: number, longitude: number): Promise
 			if (data?.status?.code !== 200)
 				return reject({ data });
 
-			resolve({ data: data.results[0] });
+			resolve({ ...data, data: data.results[0] });
 		} catch (err) {
 			reject(err);
 		}
