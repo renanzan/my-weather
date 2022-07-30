@@ -101,6 +101,7 @@ const useWeather = ({ latitude, longitude }: Props) => {
 
 	return {
 		weather,
+		forecast,
 		refreshWeather,
 		softRefreshWeather,
 		refreshForecast,

@@ -8,6 +8,9 @@
 		],
 		"baseUrl": "src",
 		"paths": {
+			"@public/*": [
+				"../public/*"
+			],
 			"@openWeather": [
 				"./services/openWeather/index.ts"
 			],
