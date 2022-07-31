@@ -15,6 +15,8 @@ interface Props {
 	fallbackAvailable?: () => void;
 }
 
+export type DayPeriodType = "day" | "night";
+
 export const LOCALSTORAGE_POSITION_KEY = "@my-weather/position";
 export const LOCALSTORAGE_GEOLOCATION_DATA_KEY = "@my-weather/geolocation-data";
 export const LOCALSTORAGE_GEOLOCATION_REQUEST_TIME_KEY = "@my-weather/geolocation-data-request-time";
@@ -24,6 +26,8 @@ const useGeolocation = (props?: Props) => {
 		fallbackAvailable
 	} = props || {};
 
+	const [now, setNow] = useState(new Date());
+	const [dayPeriod, setDayPeriod] = useState<DayPeriodType>((now.getHours() >= 6 && now.getHours() < 18) ? "day" : "night");
 	const [status, setStatus] = useState<PermissionState | undefined>(undefined);
 	const [position, setPosition] = useState<PositionType | undefined>(undefined);
 	const [geoData, setGeoData] = useState<OpenCageGeolocationDataType | undefined>(undefined);
@@ -108,6 +112,8 @@ const useGeolocation = (props?: Props) => {
 		position,
 		geoData,
 		status,
+		now,
+		dayPeriod,
 		checkGeolocationAvailable,
 		getPosition
 	};

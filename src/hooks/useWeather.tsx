@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { add } from "date-fns";
 
 import { getForecast, getWeatherNow } from "@openWeather";
-import { OpenWeatherDataType, OpenWeatherForecastDataType } from "@openWeather/types";
+import { OpenWeatherDataType, OpenWeatherForecastDataType, OpenWeatherForecastListDataType } from "@openWeather/types";
 
 export type PositionType = {
 	readonly accuracy: number;
@@ -15,6 +15,8 @@ export const LOCALSTORAGE_WEATHER_KEY = "@my-weather/weather-data";
 export const LOCALSTORAGE_WEATHER_REQUEST_TIME_KEY = "@my-weather/weather-data-request-time";
 export const LOCALSTORAGE_FORECAST_KEY = "@my-weather/forecast-data";
 export const LOCALSTORAGE_FORECAST_REQUEST_TIME_KEY = "@my-weather/forecast-data-request-time";
+
+export type DaytimeType = "night" | "morning" | "day" | "afternoon";
 
 type Props = {
 	latitude?: number;
@@ -91,6 +93,72 @@ const useWeather = ({ latitude, longitude }: Props) => {
 		return refreshForecast(latitude, longitude);
 	}
 
+	function getWeatherByDay(day: number) {
+		const daytime: {
+			[key in DaytimeType]?: Array<OpenWeatherForecastListDataType>
+		} = {};
+
+		if (!forecast)
+			return;
+
+		forecast.list.map(x => {
+			const date = new Date(x.dt_txt);
+			const hours = date.getHours();
+
+			if (day !== date.getDate())
+				return;
+
+			if (hours >= 0 && hours < 6) {
+				if (!daytime?.night)
+					daytime.night = [];
+
+				return daytime.night.push(x);
+			}
+
+			if (hours >= 6 && hours < 12) {
+				if (!daytime?.morning)
+					daytime.morning = [];
+
+				return daytime.morning.push(x);
+			}
+
+			if (hours >= 12 && hours < 18) {
+				if (!daytime?.day)
+					daytime.day = [];
+
+				return daytime.day.push(x);
+			}
+
+			if (!daytime?.afternoon)
+				daytime.afternoon = [];
+
+			return daytime.afternoon.push(x);
+		});
+
+		return daytime;
+	}
+
+	function getDaysWeather() {
+		const blackList: Array<Number> = [];
+		const days: Array<OpenWeatherForecastListDataType> = [];
+
+		console.log({ forecast });
+
+		if (!forecast)
+			return;
+
+		forecast.list.map(x => {
+			const date = new Date(x.dt_txt).getDate();
+
+			if (!blackList.includes(date)) {
+				blackList.push(date);
+				days.push(x);
+			}
+		});
+
+		return days;
+	}
+
 	useEffect(() => {
 		if (!latitude || !longitude)
 			return;
@@ -102,6 +170,8 @@ const useWeather = ({ latitude, longitude }: Props) => {
 	return {
 		weather,
 		forecast,
+		getWeatherByDay,
+		getDaysWeather,
 		refreshWeather,
 		softRefreshWeather,
 		refreshForecast,

@@ -28,7 +28,7 @@
 
 @layer components {
 	.custom-scroolbar::-webkit-scrollbar {
-		@apply w-[6px] h-[6px];
+		@apply w-[8px] h-[8px];
 	}
 	
 	.custom-scroolbar::-webkit-scrollbar-track {
@@ -36,10 +36,10 @@
 	}
 	
 	.custom-scroolbar::-webkit-scrollbar-thumb {
-		@apply rounded-lg bg-grayscale-100;
+		@apply rounded-lg bg-gray-700;
 	}
 
 	.custom-scroolbar::-webkit-scrollbar-thumb:hover {
-		@apply bg-grayscale-200
+		@apply bg-gray-600
 	}
 }
