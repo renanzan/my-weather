@@ -29,8 +29,9 @@ function DayItem({ weather, current, onClick }: DayItemProps) {
 	return (
 		<li>
 			<button
-				className={clsx("flex flex-col gap-2 w-full text-start text-sm rounded-md p-2", {
-					["bg-white/[10%]"]: (current === date.getDate())
+				className={clsx("flex flex-col gap-2 w-full h-full text-start text-sm rounded-md p-2 min-h-[200px] transition", {
+					["bg-white/[10%] backdrop-blur-md"]: (current === date.getDate()),
+					["hover:bg-white/[5%] hover:backdrop-blur-md"]: (current !== date.getDate())
 				})}
 				onClick={handleOnClick(date)}>
 				<div className="flex flex-col">
@@ -43,7 +44,7 @@ function DayItem({ weather, current, onClick }: DayItemProps) {
 					</span>
 				</div>
 
-				<div className="flex flex-col">
+				<div className="flex-1 flex flex-col">
 					<span>
 						<span className="opacity-40">min. </span>
 						<span>{(weather.main.temp_min > 0) && "+"}{weather.main.temp_min.toFixed(0)}º</span>
@@ -59,7 +60,7 @@ function DayItem({ weather, current, onClick }: DayItemProps) {
 					<div className="w-[32px] aspect-square">
 						<WeatherIcon
 							icon={weather.weather[0].icon as WeatherIconDataType}
-							className="w-[32px] aspect-square" />
+							className="h-[32px] max-w-[32px]" />
 					</div>
 
 					<span className="opacity-40 capitalize">

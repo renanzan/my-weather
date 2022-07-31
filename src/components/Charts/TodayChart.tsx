@@ -8,10 +8,13 @@ import { OpenWeatherForecastListDataType } from "@openWeather/types";
 import WeatherAnimation, { WeatherAnimationDataType } from "components/WeatherAnimation";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-	data?: { [key in DaytimeType]?: Array<OpenWeatherForecastListDataType> };
+	data?: {
+		daytime: DaytimeType;
+		chartData: Array<OpenWeatherForecastListDataType>;
+	};
 }
 
-const daytimeLabel: { [key in DaytimeType]: string } = {
+const daytimeLabel: { [key in keyof DaytimeType]: string } = {
 	night: "Noite",
 	morning: "Manhã",
 	day: "Dia",
@@ -26,7 +29,8 @@ const TodayChart: NextComponentType<{}, {}, Props> = ({ data, className, ...rest
 			</div>
 		);
 
-	const chartData = ([] as Array<OpenWeatherForecastListDataType>).concat.apply([], Object.values(data));
+	const { daytime, chartData } = data;
+
 	const constantChartData = [{ main: { temp: 20 } }, { main: { temp: 20 } }];
 
 	return (
@@ -35,30 +39,43 @@ const TodayChart: NextComponentType<{}, {}, Props> = ({ data, className, ...rest
 				<ul
 					className="relative z-10 grid gap-4"
 					style={{
-						gridTemplateColumns: `repeat(${Object.keys(data).length}, 1fr)`
+						gridTemplateColumns: `repeat(4, 1fr)`
 					}}>
-					{Object.keys(data).map((weatherKey, key) => (
+					{Object.keys(daytime).map((daytimeKey, key) => (
 						<li key={key}>
 							<span className="uppercase opacity-40">
-								{daytimeLabel[weatherKey as DaytimeType]}
+								{daytimeLabel[daytimeKey as keyof DaytimeType]}
 							</span>
 
 							<ul className="flex gap-4 mt-4">
-								{data[weatherKey as DaytimeType]?.map((weather, key) => (
+								{Object.values(daytime[daytimeKey as keyof DaytimeType])?.map((weather, key) => (
 									<li
 										key={key}
 										className="flex flex-col gap-[48px]">
+
 										<div className="w-[40px] aspect-square">
-											<WeatherAnimation animationData={weather.weather[0].icon as WeatherAnimationDataType} />
+											{weather ? (
+												<WeatherAnimation animationData={weather.weather[0].icon as WeatherAnimationDataType} />
+											) : (
+												<div className="bg-gray-200/[50%] h-max aspect-square rounded-full m-1" />
+											)}
 										</div>
 
 										<div className="flex flex-col">
-											<strong className="mt-1 font-semibold">
-												{(weather.main.temp > 0) && "+"}{weather.main.temp.toFixed(0)}º
-											</strong>
+											{weather ? (
+												<strong className="mt-1 font-semibold">
+													{(weather.main.temp > 0) && "+"}{weather.main.temp.toFixed(0)}º
+												</strong>
+											) : (
+												<strong className="mt-1 font-semibold">-</strong>
+											)}
 
 											<span className="text-sm opacity-80">
-												{format(new Date(weather.dt_txt), "HH:mm")}
+												{format(
+													new Date(0, 0, 0,
+														Number(Object.keys(daytime[daytimeKey as keyof DaytimeType])[key])
+													), "HH:mm"
+												)}
 											</span>
 										</div>
 									</li>
@@ -68,26 +85,28 @@ const TodayChart: NextComponentType<{}, {}, Props> = ({ data, className, ...rest
 					))}
 				</ul>
 
-				<div className="absolute z-0 top-[110px] -inset-x-1 opacity-60">
-					<ResponsiveContainer width="100%" height={120}>
-						<AreaChart data={(chartData.length > 1) ? chartData : constantChartData}>
-							<defs>
-								<linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
-									<stop offset="5%" stopColor="#7760B9" stopOpacity={0.8} />
-									<stop offset="95%" stopColor="#7760B9" stopOpacity={0} />
-								</linearGradient>
-							</defs>
+				<div className="absolute inset-x-0 h-[120px] overflow-hidden z-0 top-[110px] opacity-60">
+					<div className="absolute -inset-x-1 h-[120px] z-0">
+						<ResponsiveContainer width="100%" height={120}>
+							<AreaChart data={(chartData.length > 1) ? chartData : constantChartData}>
+								<defs>
+									<linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
+										<stop offset="5%" stopColor="#7760B9" stopOpacity={0.8} />
+										<stop offset="95%" stopColor="#7760B9" stopOpacity={0} />
+									</linearGradient>
+								</defs>
 
-							<Area
-								type="monotone"
-								dataKey="main.temp"
-								stroke="#8884d8"
-								fillOpacity={1}
-								fill="url(#chartColor)" />
+								<Area
+									type="monotone"
+									dataKey="main.temp"
+									stroke="#8884d8"
+									fillOpacity={1}
+									fill="url(#chartColor)" />
 
-							<YAxis domain={["dataMin-35", "dataMax"]} hide />
-						</AreaChart>
-					</ResponsiveContainer>
+								<YAxis domain={["dataMin-35", "dataMax"]} hide />
+							</AreaChart>
+						</ResponsiveContainer>
+					</div>
 				</div>
 			</div>
 		</div>

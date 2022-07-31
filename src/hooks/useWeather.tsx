@@ -16,7 +16,23 @@ export const LOCALSTORAGE_WEATHER_REQUEST_TIME_KEY = "@my-weather/weather-data-r
 export const LOCALSTORAGE_FORECAST_KEY = "@my-weather/forecast-data";
 export const LOCALSTORAGE_FORECAST_REQUEST_TIME_KEY = "@my-weather/forecast-data-request-time";
 
-export type DaytimeType = "night" | "morning" | "day" | "afternoon";
+type DaytimeTypeNight = 0 | 3;
+type DaytimeTypeMorning = 6 | 9;
+type DaytimeTypeDay = 12 | 15;
+type DaytimeTypeAfternoon = 18 | 21;
+
+export type DaytimeType = {
+	night: {
+		[key in DaytimeTypeNight]: OpenWeatherForecastListDataType | null;
+	},
+	morning: {
+		[key in DaytimeTypeMorning]: OpenWeatherForecastListDataType | null;
+	}, day: {
+		[key in DaytimeTypeDay]: OpenWeatherForecastListDataType | null;
+	}, afternoon: {
+		[key in DaytimeTypeAfternoon]: OpenWeatherForecastListDataType | null;
+	}
+};
 
 type Props = {
 	latitude?: number;
@@ -94,9 +110,26 @@ const useWeather = ({ latitude, longitude }: Props) => {
 	}
 
 	function getWeatherByDay(day: number) {
-		const daytime: {
-			[key in DaytimeType]?: Array<OpenWeatherForecastListDataType>
-		} = {};
+		const daytime: DaytimeType = {
+			night: {
+				0: null,
+				3: null
+			},
+			morning: {
+				6: null,
+				9: null
+			},
+			day: {
+				12: null,
+				15: null
+			},
+			afternoon: {
+				18: null,
+				21: null
+			}
+		};
+
+		const chartData: Array<OpenWeatherForecastListDataType> = [];
 
 		if (!forecast)
 			return;
@@ -108,34 +141,24 @@ const useWeather = ({ latitude, longitude }: Props) => {
 			if (day !== date.getDate())
 				return;
 
-			if (hours >= 0 && hours < 6) {
-				if (!daytime?.night)
-					daytime.night = [];
+			chartData.push(x);
 
-				return daytime.night.push(x);
-			}
+			if (hours >= 0 && hours < 6)
+				return daytime.night[hours as DaytimeTypeNight] = x;
 
-			if (hours >= 6 && hours < 12) {
-				if (!daytime?.morning)
-					daytime.morning = [];
+			if (hours >= 6 && hours < 12)
+				return daytime.morning[hours as DaytimeTypeMorning] = x;
 
-				return daytime.morning.push(x);
-			}
+			if (hours >= 12 && hours < 18)
+				return daytime.day[hours as DaytimeTypeDay] = x;
 
-			if (hours >= 12 && hours < 18) {
-				if (!daytime?.day)
-					daytime.day = [];
-
-				return daytime.day.push(x);
-			}
-
-			if (!daytime?.afternoon)
-				daytime.afternoon = [];
-
-			return daytime.afternoon.push(x);
+			return daytime.afternoon[hours as DaytimeTypeAfternoon] = x;
 		});
 
-		return daytime;
+		return {
+			daytime,
+			chartData
+		};
 	}
 
 	function getDaysWeather() {

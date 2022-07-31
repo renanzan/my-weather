@@ -1,44 +1,58 @@
 import { NextComponentType } from "next";
+import clsx from "clsx";
 import { useState } from "react";
 import { MdClose } from "react-icons/md";
 
 import MenuIcon from "@public/assets/icons/menu-icon.svg";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-	children?: React.ReactNode;
+	bgImage?: string;
 };
 
-const Layout: NextComponentType<{}, {}, Props> = ({ children, ...rest }) => {
+const Layout: NextComponentType<{}, {}, Props> = ({ bgImage, className, children, ...rest }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<div className="fixed items inset-0 bg-gray-900 text-gray-200 min-h-screen max-h-screen pt-[200px] overflow-auto custom-scroolbar">
-			<header className="fixed z-10 backdrop-blur-lg top-0 inset-x-0 bg-gray-900/[80%] flex flex-col items-center pt-[80px] pb-[64px] px-[80px]">
-				<button
-					onClick={() => setOpen(!open)}
-					className="absolute top-10 right-10">
-					{open ? (
-						<MenuIcon />
-					) : (
-						<MdClose />
-					)}
-				</button>
+		<div className="fixed inset-0 bg-gray-900">
+			<div className="fixed flex flex-col z-10 items inset-0 text-gray-200 min-h-screen max-h-screen pt-[200px] overflow-auto custom-scroolbar" >
+				<header className="fixed z-20 backdrop-blur-md top-0 inset-x-0 bg-gray-900/[80%] flex flex-col items-center pt-[80px] pb-[64px] px-[80px] md:bg-transparent md:backdrop-blur-none md:p-t-11 md:items-start">
+					<button
+						onClick={() => setOpen(!open)}
+						className="absolute top-10 right-10">
+						{open ? (
+							<MenuIcon />
+						) : (
+							<MdClose />
+						)}
+					</button>
 
-				<div className="text-center">
-					<h1 className="font-medium text-sm">
-						MY.WEATHER
-					</h1>
+					<div className="text-center">
+						<h1 className="font-medium text-sm">
+							MY.WEATHER
+						</h1>
 
-					<h2 className="text-xs opacity-40">
-						developed by zanoti.dev
-					</h2>
+						<h2 className="text-xs opacity-40">
+							developed by zanoti.dev
+						</h2>
+					</div>
+				</header>
+
+				<main
+					className={clsx("relative z-10", className)}
+					{...rest}>
+					{children}
+				</main>
+			</div>
+
+			{bgImage && (
+				<div className="fixed inset-0">
+					<img
+						src={bgImage}
+						className="w-full h-full object-cover opacity-25"
+						alt="Imagem de paisagem com montanhas" />
 				</div>
-			</header>
-
-			<main {...rest}>
-				{children}
-			</main>
-		</div>
+			)}
+		</div >
 	);
 }
 
