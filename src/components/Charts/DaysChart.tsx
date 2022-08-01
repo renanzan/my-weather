@@ -9,13 +9,13 @@ import WeatherIcon, { WeatherIconDataType } from "components/WeatherIcon";
 type Props = {
 	data?: Array<OpenWeatherForecastListDataType>;
 	current: number;
-	onClick: (date: number) => void;
+	onClick: (date: Date) => void;
 }
 
 type DayItemProps = {
 	weather: OpenWeatherForecastListDataType;
 	current: number;
-	onClick: (date: number) => void;
+	onClick: (date: Date) => void;
 }
 
 function DayItem({ weather, current, onClick }: DayItemProps) {
@@ -23,7 +23,7 @@ function DayItem({ weather, current, onClick }: DayItemProps) {
 
 	const handleOnClick = (date: Date) => () => {
 		if (typeof onClick === "function")
-			onClick(date.getDate());
+			onClick(date);
 	}
 
 	return (

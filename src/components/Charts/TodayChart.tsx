@@ -3,9 +3,9 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import { AreaChart, Area, YAxis, ResponsiveContainer } from 'recharts';
 
-import { DaytimeType } from "hooks/useWeather";
+import { DaytimeType } from "context/useWeather/types";
 import { OpenWeatherForecastListDataType } from "@openWeather/types";
-import WeatherAnimation, { WeatherAnimationDataType } from "components/WeatherAnimation";
+import WeatherAnimation, { WeatherAnimationDataType } from "components/Animation/WeatherAnimation";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
 	data?: {

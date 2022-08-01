@@ -1,40 +1,34 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { toast } from "react-toastify";
 import { add } from "date-fns";
 
 import { OpenCageGeolocationDataType } from "services/openCage/types";
 import { getGeolocationData } from "services/openCage";
 
-export type PositionType = {
-	readonly accuracy: number;
-	readonly latitude: number;
-	readonly longitude: number;
-}
-
-interface Props {
-	fallbackAvailable?: () => void;
-}
-
-export type DayPeriodType = "day" | "night";
+import * as T from "./types";
+import { NextComponentType } from "next";
 
 export const LOCALSTORAGE_POSITION_KEY = "@my-weather/position";
 export const LOCALSTORAGE_GEOLOCATION_DATA_KEY = "@my-weather/geolocation-data";
 export const LOCALSTORAGE_GEOLOCATION_REQUEST_TIME_KEY = "@my-weather/geolocation-data-request-time";
 
-const useGeolocation = (props?: Props) => {
+const GeolocationContext = createContext<T.ContextProps>({} as T.ContextProps);
+export const useGeolocation = () => useContext(GeolocationContext);
+
+const GeolocationContextWapper: NextComponentType<{}, {}, T.Props> = ({ children, ...rest }) => {
 	const {
 		fallbackAvailable
-	} = props || {};
-
-	const [now, setNow] = useState(new Date());
-	const [dayPeriod, setDayPeriod] = useState<DayPeriodType>((now.getHours() >= 6 && now.getHours() < 18) ? "day" : "night");
+	} = rest || {};
+	const now = new Date();
 	const [status, setStatus] = useState<PermissionState | undefined>(undefined);
-	const [position, setPosition] = useState<PositionType | undefined>(undefined);
+	const [position, setPosition] = useState<T.PositionType | undefined>(undefined);
 	const [geoData, setGeoData] = useState<OpenCageGeolocationDataType | undefined>(undefined);
 
 	const checkGeolocationAvailable = () => "geolocation" in navigator;
 
-	const getPosition = (): Promise<PositionType> => new Promise((resolve) => {
+	const dayPeriod: T.DayPeriodType = (now.getHours() >= 6 && now.getHours() < 18) ? "day" : "night";
+
+	const getPosition = (): Promise<T.PositionType> => new Promise((resolve) => {
 		navigator.geolocation.getCurrentPosition(({ coords: { accuracy, latitude, longitude } }: GeolocationPosition) => {
 			const currentPosition = { accuracy, latitude, longitude };
 
@@ -70,6 +64,8 @@ const useGeolocation = (props?: Props) => {
 	}, []);
 
 	useEffect(() => {
+		const now = new Date();
+
 		async function updateGeolocationData() {
 			if (!position)
 				return;
@@ -108,15 +104,20 @@ const useGeolocation = (props?: Props) => {
 		updateGeolocationData();
 	}, [position]);
 
-	return {
+	const value: T.ContextProps = {
 		position,
 		geoData,
 		status,
-		now,
 		dayPeriod,
 		checkGeolocationAvailable,
 		getPosition
 	};
+
+	return (
+		<GeolocationContext.Provider value={value}>
+			{children}
+		</GeolocationContext.Provider>
+	);
 }
 
-export default useGeolocation;
+export default GeolocationContextWapper;

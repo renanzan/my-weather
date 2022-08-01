@@ -38,7 +38,7 @@ const Layout: NextComponentType<{}, {}, Props> = ({ bgImage, className, children
 				</header>
 
 				<main
-					className={clsx("relative z-10", className)}
+					className={clsx("relative z-10 min-w-full min-h-full", className)}
 					{...rest}>
 					{children}
 				</main>

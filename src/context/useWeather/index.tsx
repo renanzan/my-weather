@@ -1,47 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { toast } from "react-toastify";
 import { add } from "date-fns";
 
 import { getForecast, getWeatherNow } from "@openWeather";
 import { OpenWeatherDataType, OpenWeatherForecastDataType, OpenWeatherForecastListDataType } from "@openWeather/types";
 
-export type PositionType = {
-	readonly accuracy: number;
-	readonly latitude: number;
-	readonly longitude: number;
-}
+import * as T from "./types";
+import { NextComponentType } from "next";
+import { useGeolocation } from "context/useGeolocation";
 
 export const LOCALSTORAGE_WEATHER_KEY = "@my-weather/weather-data";
 export const LOCALSTORAGE_WEATHER_REQUEST_TIME_KEY = "@my-weather/weather-data-request-time";
 export const LOCALSTORAGE_FORECAST_KEY = "@my-weather/forecast-data";
 export const LOCALSTORAGE_FORECAST_REQUEST_TIME_KEY = "@my-weather/forecast-data-request-time";
 
-type DaytimeTypeNight = 0 | 3;
-type DaytimeTypeMorning = 6 | 9;
-type DaytimeTypeDay = 12 | 15;
-type DaytimeTypeAfternoon = 18 | 21;
+const WeatherContext = createContext<T.ContextProps>({} as T.ContextProps);
+export const useWeather = () => useContext(WeatherContext);
 
-export type DaytimeType = {
-	night: {
-		[key in DaytimeTypeNight]: OpenWeatherForecastListDataType | null;
-	},
-	morning: {
-		[key in DaytimeTypeMorning]: OpenWeatherForecastListDataType | null;
-	}, day: {
-		[key in DaytimeTypeDay]: OpenWeatherForecastListDataType | null;
-	}, afternoon: {
-		[key in DaytimeTypeAfternoon]: OpenWeatherForecastListDataType | null;
-	}
-};
+const WeatherContextWapper: NextComponentType<{}, {}, T.Props> = ({ children }) => {
+	const { position } = useGeolocation();
 
-type Props = {
-	latitude?: number;
-	longitude?: number;
-}
-
-const useWeather = ({ latitude, longitude }: Props) => {
 	const [weather, setWeather] = useState<OpenWeatherDataType | undefined>(undefined);
 	const [forecast, setForecast] = useState<OpenWeatherForecastDataType | undefined>(undefined);
+	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
 	async function refreshWeather(latitude: number, longitude: number): Promise<OpenWeatherDataType | undefined> {
 		try {
@@ -110,7 +91,7 @@ const useWeather = ({ latitude, longitude }: Props) => {
 	}
 
 	function getWeatherByDay(day: number) {
-		const daytime: DaytimeType = {
+		const daytime: T.DaytimeType = {
 			night: {
 				0: null,
 				3: null
@@ -144,15 +125,15 @@ const useWeather = ({ latitude, longitude }: Props) => {
 			chartData.push(x);
 
 			if (hours >= 0 && hours < 6)
-				return daytime.night[hours as DaytimeTypeNight] = x;
+				return daytime.night[hours as T.DaytimeTypeNight] = x;
 
 			if (hours >= 6 && hours < 12)
-				return daytime.morning[hours as DaytimeTypeMorning] = x;
+				return daytime.morning[hours as T.DaytimeTypeMorning] = x;
 
 			if (hours >= 12 && hours < 18)
-				return daytime.day[hours as DaytimeTypeDay] = x;
+				return daytime.day[hours as T.DaytimeTypeDay] = x;
 
-			return daytime.afternoon[hours as DaytimeTypeAfternoon] = x;
+			return daytime.afternoon[hours as T.DaytimeTypeAfternoon] = x;
 		});
 
 		return {
@@ -164,8 +145,6 @@ const useWeather = ({ latitude, longitude }: Props) => {
 	function getDaysWeather() {
 		const blackList: Array<Number> = [];
 		const days: Array<OpenWeatherForecastListDataType> = [];
-
-		console.log({ forecast });
 
 		if (!forecast)
 			return;
@@ -183,16 +162,20 @@ const useWeather = ({ latitude, longitude }: Props) => {
 	}
 
 	useEffect(() => {
-		if (!latitude || !longitude)
+		if (!position?.latitude || !position?.longitude)
 			return;
+
+		const { latitude, longitude } = position;
 
 		softRefreshWeather(latitude, longitude);
 		softRefreshForecast(latitude, longitude);
-	}, [latitude, longitude]);
+	}, [position]);
 
-	return {
+	const value: T.ContextProps = {
 		weather,
 		forecast,
+		selectedDate,
+		setSelectedDate,
 		getWeatherByDay,
 		getDaysWeather,
 		refreshWeather,
@@ -200,6 +183,12 @@ const useWeather = ({ latitude, longitude }: Props) => {
 		refreshForecast,
 		softRefreshForecast
 	};
+
+	return (
+		<WeatherContext.Provider value={value}>
+			{children}
+		</WeatherContext.Provider>
+	);
 }
 
-export default useWeather;
+export default WeatherContextWapper;
