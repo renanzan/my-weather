@@ -49,13 +49,15 @@ const GeolocationContextWapper: NextComponentType<{}, {}, T.Props> = ({ children
 		navigator.permissions.query({ name: 'geolocation' }).then(async ({ state, onchange }) => {
 			setStatus(state);
 
-			if (state === "granted")
+			console.log("TESTE", { state });
+
+			if (state !== "denied")
 				setPosition(await getPosition());
 
 			onchange = async () => {
 				setStatus(state);
 
-				if (state === "granted")
+				if (state !== "denied")
 					return setPosition(await getPosition());
 
 				setPosition(undefined);
@@ -64,8 +66,6 @@ const GeolocationContextWapper: NextComponentType<{}, {}, T.Props> = ({ children
 	}, []);
 
 	useEffect(() => {
-		const now = new Date();
-
 		async function updateGeolocationData() {
 			if (!position)
 				return;
