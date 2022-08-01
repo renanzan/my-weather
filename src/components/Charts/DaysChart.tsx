@@ -5,33 +5,26 @@ import clsx from "clsx";
 
 import { OpenWeatherForecastListDataType } from "@openWeather/types";
 import WeatherIcon, { WeatherIconDataType } from "components/WeatherIcon";
-
-type Props = {
-	data?: Array<OpenWeatherForecastListDataType>;
-	current: number;
-	onClick: (date: Date) => void;
-}
+import { useWeather } from "context/useWeather";
 
 type DayItemProps = {
 	weather: OpenWeatherForecastListDataType;
-	current: number;
-	onClick: (date: Date) => void;
 }
 
-function DayItem({ weather, current, onClick }: DayItemProps) {
+function DayItem({ weather }: DayItemProps) {
+	const { selectedDate, setSelectedDate } = useWeather();
 	const date = new Date(weather.dt_txt);
 
 	const handleOnClick = (date: Date) => () => {
-		if (typeof onClick === "function")
-			onClick(date);
+		setSelectedDate(date);
 	}
 
 	return (
 		<li>
 			<button
-				className={clsx("flex flex-col gap-2 w-full h-full text-start text-sm rounded-md p-2 min-h-[200px] transition", {
-					["bg-white/[10%] backdrop-blur-md"]: (current === date.getDate()),
-					["hover:bg-white/[5%] hover:backdrop-blur-md"]: (current !== date.getDate())
+				className={clsx("flex flex-col gap-2 w-full h-full text-start text-sm rounded-md p-2 min-h-[200px] select-none transition", {
+					["bg-white/[10%] backdrop-blur-md"]: (selectedDate.getDate() === date.getDate()),
+					["hover:bg-white/[5%] hover:backdrop-blur-md"]: (selectedDate.getDate() !== date.getDate())
 				})}
 				onClick={handleOnClick(date)}>
 				<div className="flex flex-col">
@@ -72,12 +65,36 @@ function DayItem({ weather, current, onClick }: DayItemProps) {
 	);
 }
 
-const DaysChart: NextComponentType<{}, {}, Props> = ({ data, current, onClick }) => {
+const DaysChart: NextComponentType = () => {
+	const { getDaysWeather, loading } = useWeather();
+	const data = getDaysWeather();
+
+	if (loading)
+		return (
+			<ul
+				data-testid="no-data-fallback"
+				className="relative grid grid-cols-[repeat(6,_150px)] gap-[88px] w-fit mt-8">
+				{[...Array(6)].map((_, key) => (
+					<div key={key} className="opacity-10">
+						<div className="bg-gray-200 h-[200px] rounded-md animate-pulse" />
+					</div>
+				))}
+			</ul>
+		);
+
 	if (!data)
 		return (
-			<div>
-				Não foi possível carregar os dados
-			</div>
+			<ul
+				data-testid="no-data-fallback"
+				className="relative grid grid-cols-[repeat(6,_150px)] gap-[88px] w-fit mt-8 p-4">
+				{[...Array(6)].map((_, key) => (
+					<div key={key} className="bg-gray-200 h-[200px] rounded-md opacity-30" />
+				))}
+
+				<div className="absolute flex items-center justify-center inset-0 bg-black/[50%] backdrop-blur-md rounded-md text-red-400 font-medium text-sm">
+					Falha ao carregar dados do clima
+				</div>
+			</ul>
 		);
 
 	return (
@@ -85,7 +102,7 @@ const DaysChart: NextComponentType<{}, {}, Props> = ({ data, current, onClick })
 			className="grid gap-[88px] w-fit mt-8"
 			style={{ gridTemplateColumns: `repeat(${data.length}, 150px)` }}>
 			{data.map((weather, key) => (
-				<DayItem key={key} weather={weather} current={current} onClick={onClick} />
+				<DayItem key={key} weather={weather} />
 			))}
 		</ul>
 	);

@@ -35,9 +35,11 @@
 		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
-		"assets.d.ts"
+		"assets.d.ts",
 	],
 	"exclude": [
-		"node_modules"
+		"node_modules",
+		"**/*.test.js",
+		"src/__mocks__"
 	]
 }

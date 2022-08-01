@@ -20,6 +20,7 @@ export const useWeather = () => useContext(WeatherContext);
 const WeatherContextWapper: NextComponentType<{}, {}, T.Props> = ({ children }) => {
 	const { position } = useGeolocation();
 
+	const [loading, setLoading] = useState(true);
 	const [weather, setWeather] = useState<OpenWeatherDataType | undefined>(undefined);
 	const [forecast, setForecast] = useState<OpenWeatherForecastDataType | undefined>(undefined);
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -167,14 +168,21 @@ const WeatherContextWapper: NextComponentType<{}, {}, T.Props> = ({ children }) 
 
 		const { latitude, longitude } = position;
 
-		softRefreshWeather(latitude, longitude);
-		softRefreshForecast(latitude, longitude);
+		async function refresh() {
+			setLoading(true);
+			await softRefreshWeather(latitude, longitude);
+			await softRefreshForecast(latitude, longitude);
+			setLoading(false);
+		}
+
+		refresh();
 	}, [position]);
 
 	const value: T.ContextProps = {
 		weather,
 		forecast,
 		selectedDate,
+		loading,
 		setSelectedDate,
 		getWeatherByDay,
 		getDaysWeather,

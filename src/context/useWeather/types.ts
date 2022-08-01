@@ -35,6 +35,7 @@ export type ContextProps = {
 	weather?: OpenWeatherDataType;
 	forecast?: OpenWeatherForecastDataType;
 	selectedDate: Date;
+	loading: boolean;
 	setSelectedDate: Dispatch<SetStateAction<Date>>;
 	getWeatherByDay: (day: number) => ({
 		daytime: DaytimeType;

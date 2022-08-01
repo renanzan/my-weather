@@ -13,14 +13,18 @@ import WeatherInfo from "components/WeatherInfo";
 const DynamicTodayChart = dynamic(
 	import('../components/Charts/TodayChart'),
 	{
-		loading: ChartSkeleton,
+		loading: () => (
+			<div className="w-[500px] h-[220px] mt-10 p-4 bg-white/[20%] opacity-50 backdrop-blur-md rounded-md">
+				<ChartSkeleton />
+			</div>
+		),
 		ssr: false
 	},
 );
 
 const Home: NextPage = () => {
 	const { geoData, dayPeriod } = useGeolocation();
-	const { weather, selectedDate, setSelectedDate, getWeatherByDay, getDaysWeather } = useWeather();
+	const { weather } = useWeather();
 
 	if (!weather || !geoData)
 		return (
@@ -35,14 +39,13 @@ const Home: NextPage = () => {
 
 	return (
 		<Layout
-			className="px-4 flex flex-col justify-end md:h-full"
+			className="px-4 flex flex-col md:justify-end md:h-full"
 			bgImage={(dayPeriod === "day") ? "/assets/images/day-background.png" : "/assets/images/night-background.png"}>
+
 			<div className="flex flex-col items-center lg:flex-row md:justify-center">
 				<WeatherInfo />
 
-				<DynamicTodayChart
-					className="mt-10"
-					data={getWeatherByDay(selectedDate.getDate())} />
+				<DynamicTodayChart className="mt-10" />
 			</div>
 
 			<div className="flex flex-col items-center">
@@ -63,10 +66,7 @@ const Home: NextPage = () => {
 						</span>
 
 						<div className="mx-[90px] w-full">
-							<DaysChart
-								data={getDaysWeather()}
-								current={selectedDate.getDate()}
-								onClick={setSelectedDate} />
+							<DaysChart />
 						</div>
 					</div>
 				</div>

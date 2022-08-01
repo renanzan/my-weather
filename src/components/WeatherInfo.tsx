@@ -12,12 +12,16 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> { }
 
 const WeatherInfo: NextComponentType<{}, {}, Props> = ({ className, ...rest }) => {
 	const { geoData, dayPeriod } = useGeolocation();
-	const { weather, selectedDate } = useWeather();
+	const { weather } = useWeather();
 
 	if (!geoData || !weather)
 		return (
-			<div>
-				Dados indisponíveis!
+			<div className="relative flex items-center justify-center max-w-full w-[600px] h-[150px] p-4">
+				<div className="w-full h-full bg-gray-200 opacity-30 rounded-md" />
+
+				<div className="absolute inset-0 flex items-center justify-center bg-black/[50%] backdrop-blur-md rounded-md text-sm text-red-400 font-medium">
+					Falha ao carregar dados do clima
+				</div>
 			</div>
 		);
 
@@ -32,7 +36,7 @@ const WeatherInfo: NextComponentType<{}, {}, Props> = ({ className, ...rest }) =
 					</span>
 
 					<strong className="capitalize">
-						{format(selectedDate, "E, d MMM yy\'\' HH:mm", { locale: ptBR })}
+						{format(new Date(), "E, d MMM yy\'\' HH:mm", { locale: ptBR })}
 					</strong>
 				</div>
 

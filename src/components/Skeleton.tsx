@@ -1,5 +1,9 @@
-export const ChartSkeleton = () => (
-	<div role="status" className="relative h-[400px] bg-gray-100 rounded animate-pulse">
+import { NextComponentType } from "next";
+import React from "react";
+import clsx from "clsx";
+
+export const ChartSkeleton: NextComponentType<{}, {}, React.HTMLAttributes<HTMLDivElement>> = ({ className, ...rest }) => (
+	<div role="status" className={clsx("relative h-[400px] max-h-full w-[500px] max-w-full bg-gray-100 rounded animate-pulse", className)} {...rest}>
 		<div className="absolute inset-4 bottom-8 left-10 px-2 grid grid-cols-[repeat(12,_minmax(0,1fr))] gap-4 items-end">
 			{[65, 82, 42, 33, 72, 54, 62, 84, 92, 67, 37, 44].map((height, key) => (
 				<div key={key}
@@ -21,7 +25,7 @@ export const ChartSkeleton = () => (
 
 			<div className="absolute inset-y-0 top-[-5px] -left-6 grid grid-row-[repeat(12,_1fr)] border-solid border-gray-200">
 				{[...Array(12)].map((_, key) => (
-					<span key={key} className="bg-gray-200 w-4 h-3 rounded-sm" />
+					<span key={key} className="bg-gray-200 w-4 h-[50%] max-h-3 rounded-sm" />
 				))}
 			</div>
 		</div>

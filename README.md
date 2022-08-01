@@ -1,34 +1,104 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# My Weather - Widget React de Previsão do Tempo
 
-## Getting Started
+<div style="display: flex;">
 
-First, run the development server:
+![Dev.to blog](https://img.shields.io/badge/dev.to-0A0A0A?style=for-the-badge&logo=dev.to&logoColor=white)
 
-```bash
-npm run dev
-# or
-yarn dev
+![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
+
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+
+</div>
+
+<div align="center" style="margin-top: 32px;">
+	<img
+		src="/.github/assets/logo-my-weather.png"
+		alt="Logo My Weather"
+		style="height: 70px; width: 70px;" />
+
+  <h3>
+    <a href="#">
+      Demo
+    </a>
+    <span> | </span>
+    <a href="https://github.com/renanzan/my-weather">
+      Code
+    </a>
+    <span> | </span>
+    <a href="#">
+      Challenge
+    </a>
+  </h3>
+</div>
+
+## Visão geral
+
+Um aplicativo meteorológico que exibe a temperatura, as condições climáticas, se é dia ou noite e a localização atual do usuário.
+
+## Recursos
+- [x] Identificação automática da localização do usuário.
+- [x] Exibe o clima e outros dados meteorológicos referentes a localização atual do usuário.
+- [ ] Possibilita atualização manual dos dados meteorológicos.
+- [ ] Possibilita alternar a visualização da temperatura entre Celsius e Fahrenheit.
+- [x] Exibe informações climáticas diferentes dias.
+- [x] Interface responsiva.
+- [x] Testado e compatível com as versões mais recentes do Chrome, Edge e Safari.
+- [x] Dados de geolocalização e clima são armazenados no localStorage para poupar chamadas na api.
+- [x] Os dados no localStorage possuem prazo de validade e são atualizados quando atingem a data de vencimento.
+- [x] Elementos da interface mudam de acordo com a hora (dia/noite).
+- [x] Gráfico de área com a previsão de temperatura para o dia selecionado em diferentes horas.
+
+## Construído com
+
+- ReactJS
+- NextJS
+- Typescript
+- TailwindCSS
+- Recharts
+- Framer-motion
+- Lottie
+
+## Como usar
+
+Clique no link de demonstração ou clone/faça o download do repositório em sua máquina local.
+
+```
+`git clone https://github.com/renanzan/my-weather.git`
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Adicionar variáveis de ambiente**
+```
+NEXT_PUBLIC_OPENCAGE_KEY=
+NEXT_PUBLIC_OPENWEATHER_APPID=
+```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+**Instalar dependências**
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```
+`npm install` or `yarn install`
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+**Execute o Snap Shot no diretório raiz.**
 
-## Learn More
+```
+`npm start` or `yarn start`
+```
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## About me
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/renanzan)
 
-## Deploy on Vercel
+[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/renanzan/)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+[![Dev.to Blog](https://img.shields.io/badge/dev.to-0A0A0A?style=for-the-badge&logo=dev.to&logoColor=white)](https://dev.to/renanzan)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+[![Website](https://img.shields.io/badge/website-000000?style=for-the-badge&logo=About.me&logoColor=white)](https://zanoti.dev)

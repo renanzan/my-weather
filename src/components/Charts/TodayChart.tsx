@@ -6,13 +6,10 @@ import { AreaChart, Area, YAxis, ResponsiveContainer } from 'recharts';
 import { DaytimeType } from "context/useWeather/types";
 import { OpenWeatherForecastListDataType } from "@openWeather/types";
 import WeatherAnimation, { WeatherAnimationDataType } from "components/Animation/WeatherAnimation";
+import { useWeather } from "context/useWeather";
+import { ChartSkeleton } from "components/Skeleton";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-	data?: {
-		daytime: DaytimeType;
-		chartData: Array<OpenWeatherForecastListDataType>;
-	};
-}
+interface Props extends React.HTMLAttributes<HTMLDivElement> { }
 
 const daytimeLabel: { [key in keyof DaytimeType]: string } = {
 	night: "Noite",
@@ -21,11 +18,26 @@ const daytimeLabel: { [key in keyof DaytimeType]: string } = {
 	afternoon: "Tarde"
 }
 
-const TodayChart: NextComponentType<{}, {}, Props> = ({ data, className, ...rest }) => {
+const TodayChart: NextComponentType<{}, {}, Props> = ({ className, ...rest }) => {
+	const { getWeatherByDay, selectedDate, loading } = useWeather();
+
+	const data = getWeatherByDay(selectedDate.getDate());
+
+	if (loading)
+		return (
+			<div className="w-[500px] h-[220px] mt-10 p-4 bg-white/[20%] opacity-50 backdrop-blur-md rounded-md">
+				<ChartSkeleton />
+			</div>
+		);
+
 	if (!data)
 		return (
-			<div>
-				Não foi possível carregar os dados
+			<div className="relative w-[500px] h-[220px] mt-10 p-4">
+				<div className="bg-gray-200 opacity-30 w-full h-full rounded-md" />
+
+				<div className="absolute flex items-center justify-center inset-0 bg-black/[50%] backdrop-blur-md rounded-md font-medium text-sm text-red-400">
+					Falha ao carregar dados do clima
+				</div>
 			</div>
 		);
 
@@ -35,7 +47,7 @@ const TodayChart: NextComponentType<{}, {}, Props> = ({ data, className, ...rest
 
 	return (
 		<div className={clsx("bg-white/[10%] backdrop-blur-md rounded-md w-fit max-w-full overflow-y-hidden overflow-x-auto custom-scroolbar", className)} {...rest}>
-			<div className="relative w-fit h-fit p-6">
+			<div className="relative w-fit h-fit p-6 select-none">
 				<ul
 					className="relative z-10 grid gap-4"
 					style={{

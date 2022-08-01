@@ -15,7 +15,7 @@ const Layout: NextComponentType<{}, {}, Props> = ({ bgImage, className, children
 	return (
 		<div className="fixed inset-0 bg-gray-900">
 			<div className="fixed flex flex-col z-10 items inset-0 text-gray-200 min-h-screen max-h-screen pt-[200px] overflow-auto custom-scroolbar" >
-				<header className="fixed z-20 backdrop-blur-md top-0 inset-x-0 bg-gray-900/[80%] flex flex-col items-center pt-[80px] pb-[64px] px-[80px] md:bg-transparent md:backdrop-blur-none md:p-t-11 md:items-start">
+				<header className="fixed z-20 backdrop-blur-md top-0 inset-x-0 bg-gray-900/[80%] flex flex-col items-center py-[48px] px-[80px] md:bg-transparent md:backdrop-blur-none md:pt-[40px] lg:items-start">
 					<button
 						onClick={() => setOpen(!open)}
 						className="absolute top-10 right-10">
@@ -26,7 +26,7 @@ const Layout: NextComponentType<{}, {}, Props> = ({ bgImage, className, children
 						)}
 					</button>
 
-					<div className="text-center">
+					<div className="text-center lg:text-left">
 						<h1 className="font-medium text-sm">
 							MY.WEATHER
 						</h1>
@@ -37,9 +37,7 @@ const Layout: NextComponentType<{}, {}, Props> = ({ bgImage, className, children
 					</div>
 				</header>
 
-				<main
-					className={clsx("relative z-10 min-w-full min-h-full", className)}
-					{...rest}>
+				<main className={clsx("relative z-10 min-w-full min-h-full", className)} {...rest}>
 					{children}
 				</main>
 			</div>
@@ -49,7 +47,8 @@ const Layout: NextComponentType<{}, {}, Props> = ({ bgImage, className, children
 					<img
 						src={bgImage}
 						className="w-full h-full object-cover opacity-25"
-						alt="Imagem de paisagem com montanhas" />
+						alt="Imagem de paisagem com montanhas"
+						data-testid="background-image" />
 				</div>
 			)}
 		</div >
