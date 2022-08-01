@@ -1,40 +1,21 @@
-# My Weather - Widget React de Previsão do Tempo
-
-<div style="display: flex;">
-
-![Dev.to blog](https://img.shields.io/badge/dev.to-0A0A0A?style=for-the-badge&logo=dev.to&logoColor=white)
-
-![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
-
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-
-![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
-
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
-
-![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-
-</div>
-
 <div align="center" style="margin-top: 32px;">
 	<img
 		src="/.github/assets/logo-my-weather.png"
 		alt="Logo My Weather"
 		style="height: 70px; width: 70px;" />
 
+<div>
+	<h3 style="margin: 16px 0px 0px 0px; padding-bottom: 0px;">My Weather</h1>
+	<p>Widget React de Previsão do Tempo</p>
+</div>
+
   <h3>
-    <a href="#">
+    <a href="https://my-weather-indol.vercel.app/">
       Demo
     </a>
     <span> | </span>
     <a href="https://github.com/renanzan/my-weather">
       Code
-    </a>
-    <span> | </span>
-    <a href="#">
-      Challenge
     </a>
   </h3>
 </div>
@@ -42,6 +23,22 @@
 ## Visão geral
 
 Um aplicativo meteorológico que exibe a temperatura, as condições climáticas, se é dia ou noite e a localização atual do usuário.
+
+<img
+	src="/.github/assets/Preview.png"
+	alt="Logo My Weather"
+	style="height: auto; width: 100%;" />
+
+<div style="display: flex; margin-top: 32px;">
+
+![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+
+</div>
 
 ## Recursos
 - [x] Identificação automática da localização do usuário.
@@ -96,9 +93,6 @@ NEXT_PUBLIC_OPENWEATHER_APPID=
 ## About me
 
 [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/renanzan)
-
 [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/renanzan/)
-
 [![Dev.to Blog](https://img.shields.io/badge/dev.to-0A0A0A?style=for-the-badge&logo=dev.to&logoColor=white)](https://dev.to/renanzan)
-
 [![Website](https://img.shields.io/badge/website-000000?style=for-the-badge&logo=About.me&logoColor=white)](https://zanoti.dev)
