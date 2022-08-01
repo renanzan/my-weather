@@ -1,17 +1,18 @@
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 
 import Layout from "components/Layout";
 import { useGeolocation } from "context/useGeolocation";
 import { useWeather } from "context/useWeather";
 import clsx from "clsx";
 import { ChartSkeleton } from "components/Skeleton";
-import DaysChart from "components/Charts/DaysChart";
+import TimelineDays from "components/TimelineDays";
 import LoadingAnimation from "components/Animation/LoadingAnimation";
 import WeatherInfo from "components/WeatherInfo";
 
 const DynamicTodayChart = dynamic(
-	import('../components/Charts/TodayChart'),
+	import('../components/TodayChart'),
 	{
 		loading: () => (
 			<div className="w-[500px] h-[220px] mt-10 p-4 bg-white/[20%] opacity-50 backdrop-blur-md rounded-md">
@@ -51,7 +52,11 @@ const Home: NextPage = () => {
 			<div className="flex flex-col items-center">
 				<div className="w-full overflow-x-auto mt-10 mb-[80px] custom-scroolbar">
 					<div className="my-3 mx-auto w-fit pt-4">
-						<span className="relative block px-[90px] h-px w-full bg-white/[50%]">
+						<motion.span
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ delay: 1 }}
+							className="relative block px-[90px] h-px w-full bg-white/[50%]">
 							<span className={clsx("absolute flex justify-center text-sm pb-1 border-[0px] border-b-[1px] border-b-solid w-[150px] bottom-0 uppercase", {
 								["text-night border-night"]: (dayPeriod === "night"),
 								["text-day border-day"]: (dayPeriod === "day")
@@ -63,10 +68,10 @@ const Home: NextPage = () => {
 									["border-t-day"]: (dayPeriod === "day")
 								})} />
 							</span>
-						</span>
+						</motion.span>
 
 						<div className="mx-[90px] w-full">
-							<DaysChart />
+							<TimelineDays />
 						</div>
 					</div>
 				</div>

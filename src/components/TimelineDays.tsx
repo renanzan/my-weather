@@ -2,6 +2,7 @@ import { NextComponentType } from "next";
 import { format } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 
 import { OpenWeatherForecastListDataType } from "@openWeather/types";
 import WeatherIcon, { WeatherIconDataType } from "components/WeatherIcon";
@@ -9,9 +10,10 @@ import { useWeather } from "context/useWeather";
 
 type DayItemProps = {
 	weather: OpenWeatherForecastListDataType;
+	index: number;
 }
 
-function DayItem({ weather }: DayItemProps) {
+function DayItem({ weather, index }: DayItemProps) {
 	const { selectedDate, setSelectedDate } = useWeather();
 	const date = new Date(weather.dt_txt);
 
@@ -21,7 +23,10 @@ function DayItem({ weather }: DayItemProps) {
 
 	return (
 		<li>
-			<button
+			<motion.button
+				initial={{ y: -20, opacity: 0 }}
+				animate={{ y: 0, opacity: 1 }}
+				transition={{ delay: 0.5 + (index / 10) }}
 				className={clsx("flex flex-col gap-2 w-full h-full text-start text-sm rounded-md p-2 min-h-[200px] select-none transition", {
 					["bg-white/[10%] backdrop-blur-md"]: (selectedDate.getDate() === date.getDate()),
 					["hover:bg-white/[5%] hover:backdrop-blur-md"]: (selectedDate.getDate() !== date.getDate())
@@ -60,12 +65,12 @@ function DayItem({ weather }: DayItemProps) {
 						{weather.weather[0].description}
 					</span>
 				</div>
-			</button>
+			</motion.button>
 		</li>
 	);
 }
 
-const DaysChart: NextComponentType = () => {
+const TimelineDays: NextComponentType = () => {
 	const { getDaysWeather, loading } = useWeather();
 	const data = getDaysWeather();
 
@@ -102,10 +107,10 @@ const DaysChart: NextComponentType = () => {
 			className="grid gap-[88px] w-fit mt-8"
 			style={{ gridTemplateColumns: `repeat(${data.length}, 150px)` }}>
 			{data.map((weather, key) => (
-				<DayItem key={key} weather={weather} />
+				<DayItem key={key} weather={weather} index={key} />
 			))}
 		</ul>
 	);
 }
 
-export default DaysChart;
+export default TimelineDays;
